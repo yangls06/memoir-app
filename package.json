@@ -1,0 +1,9 @@
+{
+  "name": "memoir-app",
+  "version": "1.0.0",
+  "description": "老年人回忆录写作App",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  }
+}

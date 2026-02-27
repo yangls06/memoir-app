@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人生回忆录 - 记录珍贵的故事</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #f5f0e8 0%, #e8e0d5 100%);
+            min-height: 100vh;
+            color: #4a4a4a;
+        }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; padding: 40px 0; }
+        .header h1 { font-size: 36px; color: #8b6f47; margin-bottom: 10px; }
+        .header p { font-size: 18px; color: #999; }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        .card-title { font-size: 24px; color: #8b6f47; margin-bottom: 20px; text-align: center; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 18px; margin-bottom: 10px; color: #666; }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 15px; font-size: 18px;
+            border: 2px solid #e0e0e0; border-radius: 12px; outline: none;
+        }
+        .form-group input:focus, .form-group textarea:focus { border-color: #8b6f47; }
+        .btn {
+            width: 100%; padding: 18px; font-size: 20px;
+            border: none; border-radius: 12px; cursor: pointer; transition: all 0.3s;
+        }
+        .btn-primary { background: #8b6f47; color: white; }
+        .btn-primary:hover { background: #6d5639; }
+        .btn-secondary { background: #f0f0f0; color: #666; margin-top: 10px; }
+        .btn-voice {
+            width: 80px; height: 80px; border-radius: 50%; background: #e74c3c;
+            color: white; font-size: 24px; border: none; cursor: pointer;
+            margin: 20px auto; display: block;
+        }
+        .btn-voice.recording { animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        .question-box { background: #faf8f5; border-radius: 16px; padding: 25px; margin-bottom: 20px; text-align: center; }
+        .question-text { font-size: 22px; line-height: 1.6; color: #4a4a4a; margin-bottom: 15px; }
+        .stage-badge { display: inline-block; background: #8b6f47; color: white; padding: 5px 15px; border-radius: 20px; font-size: 14px; }
+        .answer-textarea { width: 100%; min-height: 150px; padding: 15px; font-size: 18px; border: 2px solid #e0e0e0; border-radius: 12px; resize: vertical; }
+        .timeline { position: relative; padding-left: 30px; }
+        .timeline::before { content: ''; position: absolute; left: 10px; top: 0; bottom: 0; width: 2px; background: #e0e0e0; }
+        .timeline-item { position: relative; margin-bottom: 25px; padding: 20px; background: #faf8f5; border-radius: 12px; }
+        .timeline-item::before { content: ''; position: absolute; left: -26px; top: 25px; width: 12px; height: 12px; background: #8b6f47; border-radius: 50%; }
+        .timeline-stage { font-size: 14px; color: #8b6f47; margin-bottom: 5px; }
+        .timeline-question { font-size: 16px; color: #666; margin-bottom: 10px; }
+        .timeline-answer { font-size: 18px; color: #4a4a4a; line-height: 1.6; }
+        .polish-result { background: #f9f9f9; border-left: 4px solid #8b6f47; padding: 20px; margin-top: 20px; white-space: pre-wrap; line-height: 1.8; font-size: 16px; }
+        .hidden { display: none !important; }
+        .loading { text-align: center; padding: 40px; color: #999; }
+        .nav { display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; }
+        .nav-btn { padding: 10px 20px; border: none; background: transparent; color: #8b6f47; font-size: 16px; cursor: pointer; border-bottom: 2px solid transparent; }
+        .nav-btn.active { border-bottom-color: #8b6f47; font-weight: bold; }
+        .export-section { margin-top: 30px; padding: 20px; background: #f5f5f5; border-radius: 12px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📖 人生回忆录</h1>
+            <p>记录珍贵的故事，传承温暖的记忆</p>
+        </div>
+
+        <div class="nav hidden" id="nav">
+            <button class="nav-btn active" onclick="showPage('interview')">访谈</button>
+            <button class="nav-btn" onclick="showPage('timeline')">时间线</button>
+            <button class="nav-btn" onclick="showPage('memoir')">回忆录</button>
+        </div>
+
+        <div class="card" id="welcome-page">
+            <h2 class="card-title">欢迎开始您的人生回忆录</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 30px; font-size: 16px; line-height: 1.6;">
+                我是您的回忆录助手小忆。<br>
+                我会像老朋友一样，陪您聊聊您的一生。<br>
+                您可以说话回答，也可以打字，怎么方便怎么来。
+            </p>
+            <div class="form-group">
+                <label>请问怎么称呼您？</label>
+                <input type="text" id="user-name" placeholder="例如：张阿姨">
+            </div>
+            <div class="form-group">
+                <label>您今年多大了？</label>
+                <input type="number" id="user-age" placeholder="例如：68">
+            </div>
+            <button class="btn btn-primary" onclick="startSession()">开始记录</button>
+        </div>
+
+        <div class="card hidden" id="interview-page">
+            <div class="question-box">
+                <span class="stage-badge" id="current-stage">童年时光</span>
+                <p class="question-text" id="question-text">正在加载问题...</p>
+            </div>
+            <div class="answer-area">
+                <p style="text-align: center; color: #666; margin-bottom: 10px;">点击麦克风说话，或直接在下面输入</p>
+                <button class="btn-voice" id="voice-btn" onclick="toggleRecording()">🎤</button>
+                <textarea class="answer-textarea" id="answer-text" placeholder="请分享您的故事..."></textarea>
+                <button class="btn btn-primary" onclick="submitAnswer()">提交回答</button>
+                <button class="btn btn-secondary" onclick="skipQuestion()">跳过这个问题</button>
+            </div>
+        </div>
+
+        <div class="card hidden" id="timeline-page">
+            <h2 class="card-title">您的人生时间线</h2>
+            <div class="timeline" id="timeline-content">
+                <div class="loading">加载中...</div>
+            </div>
+        </div>
+
+        <div class="card hidden" id="memoir-page">
+            <h2 class="card-title">您的回忆录</h2>
+            <button class="btn btn-primary" onclick="generateMemoir()">生成润色版回忆录</button>
+            <div class="export-section">
+                <h3 style="margin-bottom: 15px; color: #8b6f47;">导出回忆录</h3>
+                <button class="btn btn-secondary" onclick="exportText()">导出为文本文件</button>
+                <button class="btn btn-secondary" onclick="window.print()">打印 / 保存为PDF</button>
+            </div>
+            <div id="memoir-content">
+                <p style="text-align: center; color: #999; padding: 40px;">点击上方按钮生成您的回忆录...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 问题库
+        const QUESTION_BANK = {
+            childhood: [
+                "您最早的记忆是什么？能描述一下那时候的场景吗？",
+                "小时候家里有几口人？能描述一下您的家吗？",
+                "您小时候最喜欢玩什么？跟谁一起玩？",
+                "您上的第一所学校是什么样的？还记得第一天吗？",
+                "小时候过年是什么样的？最期待什么？",
+                "小时候有没有遇到过害怕或难过的事？",
+                "您小时候最崇拜的人是谁？为什么？",
+                "小时候最让您骄傲的一件事是什么？"
+            ],
+            youth: [
+                "您十几岁的时候是什么样的？",
+                "您上的是什么学校？学的是什么？",
+                "您第一次喜欢一个人是什么时候？",
+                "年轻时最想成为什么样的人？",
+                "您的第一份工作是什么？怎么找到的？",
+                "人生中有没有哪个决定改变了您的一生？",
+                "年轻时候最好的朋友是谁？",
+                "您年轻时最大的梦想是什么？"
+            ],
+            adult: [
+                "您是怎么认识您老伴的？能讲讲你们的故事吗？",
+                "孩子小时候是什么样的？您是怎么教育他们的？",
+                "您最骄傲的工作成就是什么？",
+                "有没有哪段时间特别难熬？您是怎么挺过来的？",
+                "您和朋友们最难忘的一次经历是什么？",
+                "作为父母，您最想教给孩子的是什么？",
+                "工作中最让您自豪的时刻是什么？",
+                "您是怎么平衡工作和家庭的？"
+            ],
+            elder: [
+                "如果让您给年轻人一个建议，您会说什么？",
+                "这辈子最让您骄傲的是什么？",
+                "有没有什么遗憾的事？",
+                "有什么话想对孙辈说吗？",
+                "如果用一句话总结您的一生，您会怎么说？",
+                "您最怀念的是什么时光？",
+                "现在的您，对年轻时的自己有什么想说的？",
+                "您希望后人怎么记住您？"
+            ]
+        };
+
+        const STAGE_NAMES = {
+            childhood: '童年时光',
+            youth: '青春岁月',
+            adult: '成年生活',
+            elder: '晚年感悟'
+        };
+
+        let currentSession = null;
+        let currentQuestionIndex = 0;
+        let currentStage = 'childhood';
+        let isRecording = false;
+        let recognition = null;
+
+        // 初始化语音识别
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.lang = 'zh-CN';
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            
+            recognition.onresult = (event) => {
+                let finalTranscript = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript;
+                    }
+                }
+                if (finalTranscript) {
+                    document.getElementById('answer-text').value += finalTranscript;
+                }
+            };
+            
+            recognition.onerror = () => stopRecording();
+            recognition.onend = () => { if (isRecording) recognition.start(); };
+        }
+
+        // 从LocalStorage加载数据
+        function loadSession() {
+            const saved = localStorage.getItem('memoir_session');
+            if (saved) {
+                currentSession = JSON.parse(saved);
+                return true;
+            }
+            return false;
+        }
+
+        // 保存到LocalStorage
+        function saveSession() {
+            localStorage.setItem('memoir_session', JSON.stringify(currentSession));
+        }
+
+        function startSession() {
+            const name = document.getElementById('user-name').value.trim();
+            const age = document.getElementById('user-age').value.trim();
+            
+            if (!name || !age) {
+                alert('请填写您的姓名和年龄');
+                return;
+            }
+
+            currentSession = {
+                userName: name,
+                userAge: parseInt(age),
+                currentStage: 'childhood',
+                currentQuestionIndex: 0,
+                qaList: [],
+                startTime: new Date().toISOString()
+            };
+            
+            saveSession();
+            
+            document.getElementById('nav').classList.remove('hidden');
+            document.getElementById('welcome-page').classList.add('hidden');
+            document.getElementById('interview-page').classList.remove('hidden');
+            
+            loadNextQuestion();
+        }
+
+        function loadNextQuestion() {
+            const questions = QUESTION_BANK[currentStage];
+            
+            if (currentQuestionIndex >= questions.length) {
+                // 阶段完成，进入下一阶段
+                const stages = ['childhood', 'youth', 'adult', 'elder'];
+                const currentIdx = stages.indexOf(currentStage);
+                if (currentIdx < stages.length - 1) {
+                    currentStage = stages[currentIdx + 1];
+                    currentQuestionIndex = 0;
+                    currentSession.currentStage = currentStage;
+                    currentSession.currentQuestionIndex = 0;
+                    saveSession();
+                    alert(`太好了！我们已经聊完了${STAGE_NAMES[stages[currentIdx]]}。现在让我们聊聊${STAGE_NAMES[currentStage]}。`);
+                } else {
+                    alert('感谢您分享这么多珍贵的故事！您可以去"时间线"查看所有记录，或去"回忆录"生成完整版本。');
+                    showPageById('timeline');
+                    return;
+                }
+            }
+            
+            const question = QUESTION_BANK[currentStage][currentQuestionIndex];
+            document.getElementById('question-text').textContent = question;
+            document.getElementById('current-stage').textContent = STAGE_NAMES[currentStage];
+            document.getElementById('answer-text').value = '';
+            
+            speakText(question);
+        }
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-CN';
+                utterance.rate = 0.8;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function toggleRecording() {
+            if (!recognition) {
+                alert('您的浏览器不支持语音识别，请直接输入文字');
+                return;
+            }
+            
+            const btn = document.getElementById('voice-btn');
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        }
+
+        function startRecording() {
+            isRecording = true;
+            document.getElementById('voice-btn').classList.add('recording');
+            document.getElementById('voice-btn').textContent = '⏹️';
+            recognition.start();
+        }
+
+        function stopRecording() {
+            isRecording = false;
+            document.getElementById('voice-btn').classList.remove('recording');
+            document.getElementById('voice-btn').textContent = '🎤';
+            recognition.stop();
+        }
+
+        function submitAnswer() {
+            const answer = document.getElementById('answer-text').value.trim();
+            if (!answer) {
+                alert('请先输入或说出您的回答');
+                return;
+            }
+            
+            if (isRecording) stopRecording();
+            
+            const question = QUESTION_BANK[currentStage][currentQuestionIndex];
+            
+            currentSession.qaList.push({
+                stage: currentStage,
+                stageName: STAGE_NAMES[currentStage],
+                question: question,
+                answer: answer,
+                timestamp: new Date().toISOString()
+            });
+            
+            currentQuestionIndex++;
+            currentSession.currentQuestionIndex = currentQuestionIndex;
+            saveSession();
+            
+            // 简单的追问逻辑
+            if (answer.length < 50 && Math.random() > 0.5) {
+                const followUps = [
+                    "能再多说一些吗？",
+                    "当时是什么感受呢？",
+                    "还有谁在场吗？",
+                    "那是什么时候的事？"
+                ];
+                const followUp = followUps[Math.floor(Math.random() * followUps.length)];
+                if (confirm(`小忆想再问一下：${followUp}\n\n您想继续回答吗？`)) {
+                    document.getElementById('question-text').textContent = followUp;
+                    document.getElementById('answer-text').value = '';
+                    speakText(followUp);
+                    return;
+                }
+            }
+            
+            loadNextQuestion();
+        }
+
+        function skipQuestion() {
+            currentQuestionIndex++;
+            currentSession.currentQuestionIndex = currentQuestionIndex;
+            saveSession();
+            loadNextQuestion();
+        }
+
+        function showPage(page) {
+            showPageById(page);
+        }
+
+        function showPageById(page) {
+            document.getElementById('interview-page').classList.add('hidden');
+            document.getElementById('timeline-page').classList.add('hidden');
+            document.getElementById('memoir-page').classList.add('hidden');
+            document.getElementById(`${page}-page`).classList.remove('hidden');
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (page === 'timeline') loadTimeline();
+        }
+
+        function loadTimeline() {
+            if (!currentSession) {
+                if (!loadSession()) {
+                    document.getElementById('timeline-content').innerHTML = '<p style="text-align: center; color: #999;">还没有记录，先去访谈吧~</p>';
+                    return;
+                }
+            }
+            
+            const container = document.getElementById('timeline-content');
+            
+            if (currentSession.qaList.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #999;">还没有记录，先去访谈吧~</p>';
+                return;
+            }
+            
+            container.innerHTML = currentSession.qaList.map(item => `
+                <div class="timeline-item">
+                    <div class="timeline-stage">${item.stageName}</div>
+                    <div class="timeline-question">问：${item.question}</div>
+                    <div class="timeline-answer">答：${item.answer}</div>
+                </div>
+            `).join('');
+        }
+
+        function generateMemoir() {
+            if (!currentSession && !loadSession()) {
+                alert('还没有记录，先去访谈吧~');
+                return;
+            }
+            
+            const container = document.getElementById('memoir-content');
+            container.innerHTML = '<div class="loading">正在整理您的回忆录...</div>';
+            
+            // 简单的润色：按阶段组织，添加过渡
+            let memoir = `# ${currentSession.userName}的回忆录\n\n`;
+            
+            const stages = ['childhood', 'youth', 'adult', 'elder'];
+            stages.forEach(stage => {
+                const stageQAs = currentSession.qaList.filter(qa => qa.stage === stage);
+                if (stageQAs.length > 0) {
+                    memoir += `\n## ${STAGE_NAMES[stage]}\n\n`;
+                    stageQAs.forEach((qa, idx) => {
+                        // 简单的文本清理
+                        let answer = qa.answer
+                            .replace(/那个|就是|嗯|啊|呢/g, '')
+                            .replace(/我我我|当时的当时/g, '我')
+                            .trim();
+                        
+                        if (answer.length > 20) {
+                            memoir += `${answer}\n\n`;
+                        }
+                    });
+                }
+            });
+            
+            memoir += `\n\n---\n记录于 ${new Date().toLocaleDateString('zh-CN')}`;
+            
+            container.innerHTML = `
+                <h3 style="margin: 20px 0 10px; color: #8b6f47;">${currentSession.userName}的回忆录</h3>
+                <div class="polish-result">${memoir}</div>
+            `;
+            
+            // 保存润色版本
+            currentSession.memoir = memoir;
+            saveSession();
+        }
+
+        function exportText() {
+            if (!currentSession || !currentSession.memoir) {
+                alert('请先生成回忆录');
+                return;
+            }
+            
+            const blob = new Blob([currentSession.memoir], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${currentSession.userName}的回忆录.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // 页面加载时检查是否有保存的会话
+        window.onload = function() {
+            if (loadSession()) {
+                document.getElementById('user-name').value = currentSession.userName;
+                document.getElementById('user-age').value = currentSession.userAge;
+            }
+        };
+    </script>
+</body>
+</html>
