@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
 import 'screens/topics_screen.dart';
 import 'screens/record_screen.dart';
+import 'screens/timeline_screen.dart';
+import 'screens/style_screen.dart';
 
 void main() {
   runApp(const TimeMemoirApp());
@@ -40,6 +42,8 @@ class TimeMemoirApp extends StatelessWidget {
         '/': (context) => const HomeScreen(),
         '/topics': (context) => const TopicsScreen(),
         '/record': (context) => const RecordScreen(),
+        '/timeline': (context) => const TimelineScreen(),
+        '/style': (context) => const StyleScreen(),
       },
     );
   }

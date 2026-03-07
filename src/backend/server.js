@@ -7,6 +7,8 @@ const fs = require('fs');
 require('dotenv').config();
 
 const { generateFollowUpQuestions, polishText } = require('./services/ai_service');
+const { speechToText, textToSpeech } = require('./services/xunfei_service');
+const { rewriteWithStyle, getAvailableStyles, rewriteWithMultipleStyles } = require('./services/style_service');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -24,7 +26,7 @@ if (!fs.existsSync('uploads')) {
 // 文件上传配置
 const storage = multer.diskStorage({
   destination: 'uploads/',
-  filename: (req, file, cb) => {
+  filename: (req, file, cb) =>> {
     cb(null, Date.now() + '-' + file.originalname);
   }
 });
@@ -34,7 +36,6 @@ const upload = multer({ storage });
 const db = new sqlite3.Database('./memoir.db');
 
 db.serialize(() => {
-  // 回忆录表
   db.run(`CREATE TABLE IF NOT EXISTS memoirs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id TEXT,
@@ -43,7 +44,6 @@ db.serialize(() => {
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 
-  // 章节表
   db.run(`CREATE TABLE IF NOT EXISTS chapters (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     memoir_id INTEGER,
@@ -54,7 +54,6 @@ db.serialize(() => {
     FOREIGN KEY (memoir_id) REFERENCES memoirs(id)
   )`);
 
-  // 问答记录表
   db.run(`CREATE TABLE IF NOT EXISTS qas (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     chapter_id INTEGER,
@@ -67,7 +66,6 @@ db.serialize(() => {
     FOREIGN KEY (chapter_id) REFERENCES chapters(id)
   )`);
 
-  // 时间线事件表
   db.run(`CREATE TABLE IF NOT EXISTS timeline_events (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     memoir_id INTEGER,
@@ -77,16 +75,30 @@ db.serialize(() => {
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (memoir_id) REFERENCES memoirs(id)
   )`);
+
+  db.run(`CREATE TABLE IF NOT EXISTS styled_versions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    memoir_id INTEGER,
+    style TEXT,
+    style_name TEXT,
+    content TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (memoir_id) REFERENCES memoirs(id)
+  )`);
 });
 
 // ===== API 路由 =====
 
 // 健康检查
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'ok', 
+  res.json({
+    status: 'ok',
     timestamp: new Date().toISOString(),
-    features: ['ai_followup', 'polish', 'timeline']
+    features: ['xunfei_voice', 'ai_followup', 'polish', 'style_rewrite', 'timeline'],
+    config: {
+      kimi: !!process.env.KIMI_API_KEY,
+      xunfei: !!(process.env.XUNFEI_APP_ID && process.env.XUNFEI_API_KEY),
+    },
   });
 });
 
@@ -145,42 +157,40 @@ app.get('/api/topics/:topicId/questions', (req, res) => {
   });
 });
 
-// 语音识别（模拟）
+// 语音识别 (讯飞)
 app.post('/api/speech-to-text', upload.single('audio'), async (req, res) => {
   try {
-    const { temp_text } = req.body;
-    
-    // 实际应调用讯飞/百度语音识别API
-    // 这里模拟返回
-    const mockTexts = [
-      "那是1968年，我响应号召下乡插队，那时候我才18岁。",
-      "我小时候住在农村，家里很穷，但过年的时候特别热闹。",
-      "我第一次见到我爱人的时候，是在厂里的文艺汇演上。"
-    ];
-    
-    const text = temp_text || mockTexts[Math.floor(Math.random() * mockTexts.length)];
+    if (!req.file) {
+      return res.status(400).json({ error: 'No audio file' });
+    }
+
+    const result = await speechToText(req.file.path);
     
     res.json({
-      text: text,
-      confidence: 0.95,
-      audio_url: req.file ? `/uploads/${req.file.filename}` : null
+      ...result,
+      audio_url: req.file ? `/uploads/${req.file.filename}` : null,
     });
   } catch (error) {
+    console.error('Speech to text error:', error);
     res.status(500).json({ error: error.message });
   }
 });
 
-// TTS 语音合成（模拟）
-app.post('/api/text-to-speech', (req, res) => {
-  const { text } = req.body;
-  
-  // 实际应调用讯飞/Azure TTS API
-  // 返回音频文件URL或base64
-  res.json({
-    audio_url: null, // 实际应返回合成的音频文件
-    text: text,
-    message: 'TTS合成成功（模拟）'
-  });
+// 语音合成 (讯飞)
+app.post('/api/text-to-speech', async (req, res) => {
+  try {
+    const { text, voice = 'xiaoyan', speed = 50 } = req.body;
+    
+    if (!text) {
+      return res.status(400).json({ error: 'Text is required' });
+    }
+
+    const result = await textToSpeech(text, { voice, speed });
+    res.json(result);
+  } catch (error) {
+    console.error('Text to speech error:', error);
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // 生成AI追问问题
@@ -229,6 +239,46 @@ app.post('/api/polish', async (req, res) => {
   }
 });
 
+// 获取可用风格列表
+app.get('/api/styles', (req, res) => {
+  const styles = getAvailableStyles();
+  res.json({ styles });
+});
+
+// 风格改写
+app.post('/api/rewrite', async (req, res) => {
+  try {
+    const { text, style } = req.body;
+    
+    if (!text || !style) {
+      return res.status(400).json({ error: 'Text and style are required' });
+    }
+
+    const result = await rewriteWithStyle(text, style);
+    res.json(result);
+  } catch (error) {
+    console.error('Rewrite error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// 批量风格改写（生成多种风格）
+app.post('/api/rewrite/batch', async (req, res) => {
+  try {
+    const { text, styles } = req.body;
+    
+    if (!text || !styles || !Array.isArray(styles)) {
+      return res.status(400).json({ error: 'Text and styles array are required' });
+    }
+
+    const results = await rewriteWithMultipleStyles(text, styles);
+    res.json({ results });
+  } catch (error) {
+    console.error('Batch rewrite error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // 创建回忆录
 app.post('/api/memoirs', (req, res) => {
   const { user_id, title } = req.body;
@@ -239,6 +289,21 @@ app.post('/api/memoirs', (req, res) => {
     function(err) {
       if (err) return res.status(500).json({ error: err.message });
       res.json({ id: this.lastID, message: '回忆录创建成功' });
+    }
+  );
+});
+
+// 获取回忆录详情
+app.get('/api/memoirs/:memoirId', (req, res) => {
+  const { memoirId } = req.params;
+  
+  db.get(
+    'SELECT * FROM memoirs WHERE id = ?',
+    [memoirId],
+    (err, row) => {
+      if (err) return res.status(500).json({ error: err.message });
+      if (!row) return res.status(404).json({ error: 'Memoir not found' });
+      res.json(row);
     }
   );
 });
@@ -254,6 +319,20 @@ app.post('/api/memoirs/:memoirId/chapters', (req, res) => {
     function(err) {
       if (err) return res.status(500).json({ error: err.message });
       res.json({ id: this.lastID, message: '章节创建成功' });
+    }
+  );
+});
+
+// 获取章节列表
+app.get('/api/memoirs/:memoirId/chapters', (req, res) => {
+  const { memoirId } = req.params;
+  
+  db.all(
+    'SELECT * FROM chapters WHERE memoir_id = ? ORDER BY created_at',
+    [memoirId],
+    (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ chapters: rows });
     }
   );
 });
@@ -303,7 +382,6 @@ app.get('/api/chapters/:chapterId/qas', (req, res) => {
 app.post('/api/memoirs/:memoirId/timeline', (req, res) => {
   const { memoirId } = req.params;
   
-  // 从问答中提取年份
   db.all(
     `SELECT q.*, c.topic FROM qas q 
      JOIN chapters c ON q.chapter_id = c.id 
@@ -331,20 +409,121 @@ app.post('/api/memoirs/:memoirId/timeline', (req, res) => {
       
       // 排序并去重
       timeline.sort((a, b) => a.year - b.year);
-      const unique = timeline.filter((item, index, self) => 
-        index === self.findIndex(t => t.year === item.year)
-      );
+      const unique = [];
+      const seen = new Set();
+      timeline.forEach(item => {
+        if (!seen.has(item.year)) {
+          seen.add(item.year);
+          unique.push(item);
+        }
+      });
       
       res.json({ timeline: unique });
     }
   );
 });
 
+// 获取时间线
+app.get('/api/memoirs/:memoirId/timeline', (req, res) => {
+  const { memoirId } = req.params;
+  
+  db.all(
+    'SELECT * FROM timeline_events WHERE memoir_id = ? ORDER BY year',
+    [memoirId],
+    (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ timeline: rows });
+    }
+  );
+});
+
+// 保存风格版本
+app.post('/api/memoirs/:memoirId/styles', (req, res) => {
+  const { memoirId } = req.params;
+  const { style, style_name, content } = req.body;
+  
+  db.run(
+    'INSERT INTO styled_versions (memoir_id, style, style_name, content) VALUES (?, ?, ?, ?)',
+    [memoirId, style, style_name, content],
+    function(err) {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ id: this.lastID, message: '风格版本保存成功' });
+    }
+  );
+});
+
+// 获取风格版本
+app.get('/api/memoirs/:memoirId/styles', (req, res) => {
+  const { memoirId } = req.params;
+  
+  db.all(
+    'SELECT * FROM styled_versions WHERE memoir_id = ? ORDER BY created_at',
+    [memoirId],
+    (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ styles: rows });
+    }
+  );
+});
+
+// 生成完整回忆录
+app.post('/api/memoirs/:memoirId/generate', async (req, res) => {
+  try {
+    const { memoirId } = req.params;
+    const { style } = req.body;
+    
+    // 获取所有问答
+    const qas = await new Promise((resolve, reject) => {
+      db.all(
+        `SELECT q.* FROM qas q 
+         JOIN chapters c ON q.chapter_id = c.id 
+         WHERE c.memoir_id = ? ORDER BY q.created_at`,
+        [memoirId],
+        (err, rows) => {
+          if (err) reject(err);
+          else resolve(rows);
+        }
+      );
+    });
+    
+    // 合并文本
+    const fullText = qas.map(qa => qa.polished_text || qa.answer_text).join('\n\n');
+    
+    // 如果指定了风格，进行改写
+    let finalText = fullText;
+    let styleInfo = null;
+    
+    if (style && style !== 'plain') {
+      const rewriteResult = await rewriteWithStyle(fullText, style);
+      if (rewriteResult.success) {
+        finalText = rewriteResult.rewritten;
+        styleInfo = {
+          key: style,
+          name: rewriteResult.style
+        };
+      }
+    }
+    
+    res.json({
+      memoir_id: memoirId,
+      content: finalText,
+      word_count: finalText.length,
+      style: styleInfo,
+      qa_count: qas.length,
+    });
+    
+  } catch (error) {
+    console.error('Generate error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // 启动服务器
 app.listen(PORT, () => {
   console.log(`🚀 时光回忆录后端服务运行在端口 ${PORT}`);
   console.log(`📚 API文档: http://localhost:${PORT}/api/health`);
-  console.log(`🤖 AI功能: ${process.env.KIMI_API_KEY ? '已启用' : '未配置（使用备用逻辑）'}`);
+  console.log(`🤖 Kimi AI: ${process.env.KIMI_API_KEY ? '✅' : '❌'}`);
+  console.log(`🎙️ 讯飞语音: ${process.env.XUNFEI_APP_ID ? '✅' : '❌'}`);
 });
 
 module.exports = app;

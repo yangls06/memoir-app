@@ -3,10 +3,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  // 根据环境修改 baseUrl
   static const String baseUrl = 'http://localhost:3000/api';
-  // 生产环境: 'https://your-api-domain.com/api'
-  // 安卓模拟器: 'http://10.0.2.2:3000/api'
 
   // 获取主题列表
   static Future<dynamic> getTopics() async {
@@ -34,10 +31,7 @@ class ApiService {
       'POST',
       Uri.parse('$baseUrl/speech-to-text'),
     );
-    
-    request.files.add(
-      await http.MultipartFile.fromPath('audio', audioPath),
-    );
+    request.files.add(await http.MultipartFile.fromPath('audio', audioPath));
     
     final response = await request.send();
     final responseData = await response.stream.bytesToString();
@@ -58,16 +52,11 @@ class ApiService {
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     }
-    // TTS失败不抛异常，静默处理
-    return {'audio_url': null};
+    return {'audioUrl': null};
   }
 
   // 获取AI追问
-  static Future<dynamic> getFollowUp(
-    String answer,
-    String topic,
-    String question,
-  ) async {
+  static Future<dynamic> getFollowUp(String answer, String topic, String question) async {
     final response = await http.post(
       Uri.parse('$baseUrl/followup'),
       headers: {'Content-Type': 'application/json'},
@@ -96,6 +85,52 @@ class ApiService {
     throw Exception('Failed to polish text');
   }
 
+  // 获取风格列表
+  static Future<dynamic> getStyles() async {
+    final response = await http.get(Uri.parse('$baseUrl/styles'));
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    }
+    throw Exception('Failed to load styles');
+  }
+
+  // 风格改写
+  static Future<dynamic> rewriteWithStyle(String text, String style) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/rewrite'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'text': text, 'style': style}),
+    );
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    }
+    throw Exception('Failed to rewrite');
+  }
+
+  // 生成回忆录
+  static Future<dynamic> generateMemoir(int memoirId, String style) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/memoirs/$memoirId/generate'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'style': style}),
+    );
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    }
+    throw Exception('Failed to generate memoir');
+  }
+
+  // 获取时间线
+  static Future<dynamic> getTimeline(int memoirId) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/memoirs/$memoirId/timeline'),
+    );
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    }
+    throw Exception('Failed to load timeline');
+  }
+
   // 创建回忆录
   static Future<dynamic> createMemoir(String userId, String title) async {
     final response = await http.post(
@@ -120,16 +155,5 @@ class ApiService {
       return jsonDecode(response.body);
     }
     throw Exception('Failed to create chapter');
-  }
-
-  // 获取时间线
-  static Future<dynamic> getTimeline(int memoirId) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/memoirs/$memoirId/timeline'),
-    );
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    }
-    throw Exception('Failed to get timeline');
   }
 }
