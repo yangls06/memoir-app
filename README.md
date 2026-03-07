@@ -4,54 +4,114 @@
 
 一款帮助老年人用语音记录人生故事的 AI 应用。
 
+## 在线演示
+
+- **Web 应用**: https://timememoir-web.vercel.app (待部署)
+- **API 文档**: https://timememoir-api.vercel.app/api/health (待部署)
+
 ## 核心功能
 
 1. **AI引导问题** - 基于人生主题的智能提问
 2. **语音朗读** - 问题语音播报，方便不识字的老人
-3. **语音回答** - 老人说话，AI转文字
+3. **语音回答** - 老人说话，AI转文字 (讯飞API)
 4. **5W1H追问** - AI基于缺失维度追问细节
 5. **时间线整理** - 可视化人生地图
 6. **AI润色** - 去除口语化，生成白描版本
-7. **作家风格** - 6种文学风格改写
+7. **作家风格** - 6种文学风格改写 (汪曾祺/张爱玲/余华/杨绛/史铁生)
+
+## 快速开始
+
+```bash
+# 克隆项目
+git clone https://github.com/yangls06/memoir-app.git
+cd memoir-app
+
+# 安装后端依赖
+cd src/backend
+npm install
+
+# 配置环境变量
+cp .env.example .env
+# 编辑 .env 填入 API Keys
+
+# 启动后端
+npm run dev
+
+# 启动前端
+cd ../frontend
+flutter pub get
+flutter run
+```
+
+## Vercel 部署
+
+详见 [Vercel 部署指南](docs/VERCEL_DEPLOY.md)
+
+```bash
+# 安装 Vercel CLI
+npm i -g vercel
+
+# 登录并部署
+vercel login
+vercel --prod
+```
 
 ## 项目结构
 
 ```
 memoir-app/
-├── docs/           # 产品文档
-├── prompts/        # AI Prompts
-├── src/            # 源代码
-└── design/         # 设计稿
+├── docs/                  # 文档
+│   ├── PRD-v2.0.md
+│   ├── UI-Design.md
+│   ├── Tech-Architecture.md
+│   ├── Marketing-Plan.md
+│   └── VERCEL_DEPLOY.md   # Vercel部署指南
+├── src/
+│   ├── backend/           # Node.js后端
+│   │   ├── server.js
+│   │   ├── index.js       # Vercel入口
+│   │   └── services/
+│   │       ├── ai_service.js
+│   │       ├── xunfei_service.js      # 讯飞语音
+│   │       └── style_service.js       # 作家风格
+│   └── frontend/          # Flutter前端
+│       └── lib/
+│           ├── screens/
+│           │   ├── home_screen.dart
+│           │   ├── topics_screen.dart
+│           │   ├── record_screen.dart
+│           │   ├── timeline_screen.dart # 时间线
+│           │   └── style_screen.dart    # 风格选择
+│           └── services/
+├── prompts/               # AI Prompts
+├── vercel.json            # Vercel配置
+└── README.md
 ```
 
-## 快速开始
+## 技术栈
 
-- [产品需求文档 (PRD)](docs/PRD-v2.0.md)
-- [UI设计方案](docs/UI-Design.md)
-- [技术架构](docs/Tech-Architecture.md)
-- [运营方案](docs/Marketing-Plan.md)
+- **后端**: Node.js + Express + SQLite
+- **前端**: Flutter (iOS/Android/Web)
+- **AI**: Kimi API + 讯飞语音
+- **部署**: Vercel
 
-## 商业模式
+## 版本迭代
 
-| 版本 | 价格 | 功能 |
+| 版本 | 日期 | 功能 |
 |------|------|------|
-| 免费版 | ¥0 | 1个主题 + 白描润色 |
-| 标准版 | ¥198 | 全部主题 + 3种风格 |
-| 精装版 | ¥498 | 全部功能 + 实体书 |
+| v0.1 | 2026.03.07 | MVP基础功能 |
+| v0.2 | 2026.03.07 | AI追问+润色 |
+| v0.3 | 2026.03.07 | 讯飞语音+作家风格+时间线 |
+| v0.4 | - | Vercel部署 |
 
-## 团队
+## 截图
 
-本项目由 AI Agent 团队协作完成：
-- 市场调研员 - 竞品分析
-- 产品经理 - PRD文档
-- 设计师 - UI/UX设计
-- 程序员 - 技术架构
-- 营销运营 - 推广方案
+(待添加)
 
-## 时间线
+## 贡献
 
-- 2026.03.07 - 项目启动，完成V2.0方案设计
+本项目由 AI Agent 团队协作完成。
 
----
+## License
 
-Made with ❤️ for our parents
+MIT

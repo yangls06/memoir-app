@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "name": "timememoir-api",
+  "builds": [
+    {
+      "src": "api/index.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "api/index.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "api/index.js"
+    }
+  ],
+  "env": {
+    "KIMI_API_KEY": "@kimi-api-key",
+    "XUNFEI_APP_ID": "@xunfei-app-id",
+    "XUNFEI_API_KEY": "@xunfei-api-key",
+    "XUNFEI_API_SECRET": "@xunfei-api-secret"
+  }
+}
