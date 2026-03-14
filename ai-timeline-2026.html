@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026年AI热点新闻时间线</title>
+    <style>
+        :root {
+            /* 默认简洁主题 */
+            --bg-primary: #fafafa;
+            --bg-secondary: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --accent-color: #2563eb;
+            --accent-light: #dbeafe;
+            --border-color: #e5e5e5;
+            --timeline-line: #d1d5db;
+            --card-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --tag-bg: #f3f4f6;
+            --tag-text: #4b5563;
+        }
+
+        /* 深色主题 */
+        [data-theme="dark"] {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --text-primary: #f5f5f5;
+            --text-secondary: #a3a3a3;
+            --accent-color: #60a5fa;
+            --accent-light: #1e3a5f;
+            --border-color: #2a2a2a;
+            --timeline-line: #404040;
+            --card-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            --tag-bg: #262626;
+            --tag-text: #d4d4d4;
+        }
+
+        /* 赛博朋克主题 */
+        [data-theme="cyber"] {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --text-primary: #00ff9d;
+            --text-secondary: #00d4aa;
+            --accent-color: #ff00ff;
+            --accent-light: rgba(255,0,255,0.1);
+            --border-color: #1a1a2e;
+            --timeline-line: linear-gradient(180deg, #00ff9d 0%, #ff00ff 100%);
+            --card-shadow: 0 0 20px rgba(0,255,157,0.1);
+            --tag-bg: rgba(0,255,157,0.1);
+            --tag-text: #00ff9d;
+        }
+
+        /* 纸张质感主题 */
+        [data-theme="paper"] {
+            --bg-primary: #f5f0e8;
+            --bg-secondary: #faf8f3;
+            --text-primary: #2c2416;
+            --text-secondary: #5c4d3c;
+            --accent-color: #8b4513;
+            --accent-light: #e8dcc8;
+            --border-color: #d4c4a8;
+            --timeline-line: #a08060;
+            --card-shadow: 0 2px 8px rgba(44,36,22,0.08);
+            --tag-bg: #e8dcc8;
+            --tag-text: #5c4d3c;
+        }
+
+        /* 霓虹渐变主题 */
+        [data-theme="neon"] {
+            --bg-primary: #1a0a2e;
+            --bg-secondary: #240f4a;
+            --text-primary: #ffffff;
+            --text-secondary: #c9b1ff;
+            --accent-color: #ff006e;
+            --accent-light: rgba(255,0,110,0.15);
+            --border-color: #3d1a6e;
+            --timeline-line: linear-gradient(180deg, #ff006e 0%, #8338ec 50%, #3a86ff 100%);
+            --card-shadow: 0 4px 20px rgba(255,0,110,0.2);
+            --tag-bg: rgba(131,56,236,0.2);
+            --tag-text: #c9b1ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        /* 赛博朋克特殊效果 */
+        [data-theme="cyber"] body {
+            background: 
+                linear-gradient(90deg, rgba(0,255,157,0.03) 1px, transparent 1px),
+                linear-gradient(rgba(0,255,157,0.03) 1px, transparent 1px),
+                var(--bg-primary);
+            background-size: 50px 50px, 50px 50px, 100% 100%;
+        }
+
+        /* 霓虹渐变特殊效果 */
+        [data-theme="neon"] body {
+            background: 
+                radial-gradient(ellipse at top, rgba(255,0,110,0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom, rgba(58,134,255,0.1) 0%, transparent 50%),
+                var(--bg-primary);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        [data-theme="cyber"] h1 {
+            text-shadow: 0 0 20px rgba(0,255,157,0.5);
+            background: linear-gradient(135deg, #00ff9d 0%, #ff00ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        [data-theme="neon"] h1 {
+            background: linear-gradient(135deg, #ff006e 0%, #8338ec 50%, #3a86ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+        }
+
+        .theme-selector {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .theme-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .theme-btn:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .theme-btn.active {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        /* 赛博朋克按钮特殊效果 */
+        [data-theme="cyber"] .theme-btn {
+            border: 1px solid #00ff9d;
+            background: transparent;
+            color: #00ff9d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        [data-theme="cyber"] .theme-btn:hover {
+            background: rgba(0,255,157,0.1);
+            box-shadow: 0 0 10px rgba(0,255,157,0.3);
+        }
+
+        [data-theme="cyber"] .theme-btn.active {
+            background: #00ff9d;
+            color: #0a0a0f;
+            box-shadow: 0 0 20px rgba(0,255,157,0.5);
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 6px 14px;
+            border: none;
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--timeline-line);
+        }
+
+        /* 赛博朋克时间线发光效果 */
+        [data-theme="cyber"] .timeline::before {
+            width: 2px;
+            box-shadow: 0 0 10px rgba(0,255,157,0.5);
+        }
+
+        [data-theme="neon"] .timeline::before {
+            width: 3px;
+            box-shadow: 0 0 15px rgba(255,0,110,0.3);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 30px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+        .timeline-item:nth-child(2) { animation-delay: 0.2s; }
+        .timeline-item:nth-child(3) { animation-delay: 0.3s; }
+        .timeline-item:nth-child(4) { animation-delay: 0.4s; }
+        .timeline-item:nth-child(5) { animation-delay: 0.5s; }
+        .timeline-item:nth-child(6) { animation-delay: 0.6s; }
+        .timeline-item:nth-child(7) { animation-delay: 0.7s; }
+        .timeline-item:nth-child(8) { animation-delay: 0.8s; }
+        .timeline-item:nth-child(9) { animation-delay: 0.9s; }
+        .timeline-item:nth-child(10) { animation-delay: 1s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -36px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            border: 3px solid var(--bg-primary);
+            box-shadow: 0 0 0 2px var(--accent-color);
+        }
+
+        [data-theme="cyber"] .timeline-item::before {
+            box-shadow: 0 0 10px var(--accent-color), 0 0 20px var(--accent-color);
+            border-color: var(--bg-primary);
+        }
+
+        [data-theme="neon"] .timeline-item::before {
+            box-shadow: 0 0 15px var(--accent-color);
+        }
+
+        .timeline-date {
+            font-size: 0.85rem;
+            color: var(--accent-color);
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timeline-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            background: var(--accent-light);
+            border-radius: 10px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .timeline-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .timeline-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        [data-theme="cyber"] .timeline-card:hover {
+            box-shadow: 0 0 30px rgba(0,255,157,0.15);
+            border-color: rgba(0,255,157,0.3);
+        }
+
+        [data-theme="neon"] .timeline-card:hover {
+            box-shadow: 0 0 30px rgba(255,0,110,0.2);
+        }
+
+        .timeline-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+
+        .timeline-content {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .timeline-tags {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 4px 10px;
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            border-radius: 12px;
+            font-size: 0.75rem;
+        }
+
+        .highlight {
+            background: var(--accent-light);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            margin-bottom: 40px;
+            border: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 50px;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .timeline {
+                padding-left: 20px;
+            }
+            
+            .timeline-item {
+                padding-left: 20px;
+            }
+            
+            .timeline-item::before {
+                left: -26px;
+                width: 10px;
+                height: 10px;
+            }
+            
+            .timeline-card {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 2026年AI热点新闻时间线</h1>
+            <p class="subtitle">从近到远，追踪人工智能领域的重大事件与突破</p>
+            
+            <div class="theme-selector">
+                <button class="theme-btn active" data-theme="default">🌟 简洁默认</button>
+                <button class="theme-btn" data-theme="dark">🌙 深色模式</button>
+                <button class="theme-btn" data-theme="cyber">⚡ 赛博朋克</button>
+                <button class="theme-btn" data-theme="paper">📜 纸张质感</button>
+                <button class="theme-btn" data-theme="neon">🌈 霓虹渐变</button>
+            </div>
+        </header>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">重大事件</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">8</div>
+                <div class="stat-label">类别</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">$650B</div>
+                <div class="stat-label">行业投资</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">7.5亿</div>
+                <div class="stat-label">Gemini月活</div>
+            </div>
+        </div>
+
+        <div class="filter-bar">
+            <button class="filter-btn active" data-filter="all">全部</button>
+            <button class="filter-btn" data-filter="model">大模型</button>
+            <button class="filter-btn" data-filter="business">商业投资</button>
+            <button class="filter-btn" data-filter="military">军事/政治</button>
+            <button class="filter-btn" data-filter="legal">法律伦理</button>
+            <button class="filter-btn" data-filter="medical">医疗健康</button>
+            <button class="filter-btn" data-filter="robotics">机器人</button>
+            <button class="filter-btn" data-filter="china">中国AI</button>
+        </div>
+
+        <div class="timeline">
+            <!-- 2月 -->
+            <div class="timeline-item" data-category="model business">
+                <div class="timeline-date">
+                    2026年2月14日
+                    <span class="timeline-badge">最新</span>
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">加拿大-德国签署AI联盟协议</div>
+                    <div class="timeline-content">
+                        两国建立<span class="highlight">主权技术联盟</span>，旨在减少对美中技术的依赖，推动"AI for the public good"，并与图灵奖得主Yoshua Bengio的LawZero研究机构合作推进安全AI设计。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">国际合作</span>
+                        <span class="tag">地缘政治</span>
+                        <span class="tag">AI治理</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-category="military legal">
+                <div class="timeline-date">
+                    2026年2月13日
+                    <span class="timeline-badge">争议</span>
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">美军在委内瑞拉行动中使用Claude AI</div>
+                    <div class="timeline-content">
+                        据报道，美军在抓捕马杜罗的军事行动中使用了Anthropic的Claude模型，这明显违反了Anthropic的使用政策。同时，<span class="highlight">五角大楼威胁终止与Anthropic的关系</span>，因其拒绝放宽军事用途限制。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">军事AI</span>
+                        <span class="tag">伦理争议</span>
+                        <span class="tag">Anthropic</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-category="model">
+                <div class="timeline-date">
+                    2026年2月13日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">OpenAI发布GPT-5.3-Codex-Spark并退役GPT-4o</div>
+                    <div class="timeline-content">
+                        推出超高速编码助手，每秒生成<span class="highlight">1000+ token</span>。同时因8起诉讼指控GPT-4o导致用户心理健康危机甚至自杀，OpenAI将其从ChatGPT界面移除。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">OpenAI</span>
+                        <span class="tag">代码生成</span>
+                        <span class="tag">产品退役</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-category="business">
+                <div class="timeline-date">
+                    2026年2月13日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">Anthropic超级碗广告效果显著</div>
+                    <div class="timeline-content">
+                        Anthropic投放广告攻击OpenAI引入广告的决定，广告后<span class="highlight">Claude日活跃用户增长11%</span>，网站访问量激增6.5%，超过同期其他竞争对手。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">市场营销</span>
+                        <span class="tag">用户增长</span>
+                        <span class="tag">超级碗</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-category="model">
+                <div class="timeline-date">
+                    2026年2月12日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">Google发布Gemini 3 Deep Think</div>
+                    <div class="timeline-content">
+                        专为科学研究设计，在<span class="highlight">数学、物理、化学奥赛</span>中达到金牌水平。罗格斯大学研究人员用其识别出同行评审数学论文中的逻辑缺陷，杜克大学科学家用它设计半导体晶体生长配方。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">Google</span>
+                        <span class="tag">科学研究</span>
+                        <span class="tag">多模态</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-category="china">
+                <div class="timeline-date">
+                    2026年2月11日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">智谱AI发布GLM-5</div>
+                    <div class="timeline-content">
+                        <span class="highlight">7440亿参数</span>大模型，采用稀疏注意力架构，在华为昇腾、摩尔线程等国产芯片上运行，性能接近Claude Opus 4.5，在某些测试中超越Gemini 3 Pro。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">智谱AI</span>
+                        <span class="tag">国产芯片</span>
+                        <span class="tag">开源模型</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-category="china">
+                <div class="timeline-date">
+                    2026年2月10日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">字节跳动发布Seedance 2.0</div>
+                    <div class="timeline-content">
+                        视频生成模型支持<span class="highlight">9张图片+3个视频+3个音频</span>作为输入，可生成电影级质量视频。因博主质疑声音生成功能的同意问题，字节暂停了该功能。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">字节跳动</span>
+                        <span class="tag">视频生成</span>
+                        <span class="tag">多模态</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-category="business">
+                <div class="timeline-date">
+                    2026年2月5日
+                    <span class="timeline-badge">重磅</span>
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">Anthropic发布Claude Opus 4.6并融资300亿美元</div>
+                    <div class="timeline-content">
+                        新模型拥有<span class="highlight">100万token上下文窗口</span>，在Humanity's Last Exam测试中领先。Claude Cowork Legal插件发布当天导致法律科技股暴跌2850亿美元。公司估值达3800亿美元。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">Claude</span>
+                        <span class="tag">融资</span>
+                        <span class="tag">长上下文</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-category="model">
+                <div class="timeline-date">
+                    2026年2月5日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">OpenAI发布GPT-5.3-Codex</div>
+                    <div class="timeline-content">
+                        最先进的代理编码模型，结合GPT-5.2-Codex的编码能力和GPT-5.2的推理能力，<span class="highlight">速度提升25%</span>。与Ginkgo Bioworks合作，将无细胞蛋白合成成本降低40%。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">OpenAI</span>
+                        <span class="tag">生物AI</span>
+                        <span class="tag">代码生成</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-category="business">
+                <div class="timeline-date">
+                    2026年2月2日
+                    <span class="timeline-badge">重磅</span>
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">SpaceX与xAI合并，估值1.25万亿美元</div>
+                    <div class="timeline-content">
+                        马斯克将两家公司合并为<span class="highlight">全球最有价值的私人公司</span>，计划2026年IPO。SpaceX向FCC申请发射100万颗卫星组建太空数据中心，马斯克称"太空中生成AI计算的成本最低"。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">马斯克</span>
+                        <span class="tag">SpaceX</span>
+                        <span class="tag">xAI</span>
+                        <span class="tag">太空AI</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1月 -->
+            <div class="timeline-item" data-category="business">
+                <div class="timeline-date">
+                    2026年1月29日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">亚马逊宣布2000亿美元AI基础设施投资</div>
+                    <div class="timeline-content">
+                        2026年资本支出同比增长近60%，主要用于AI基础设施。尽管AWS全球云市场份额降至<span class="highlight">28%</span>（多年低点），但AI相关收入保持强劲增长。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">亚马逊</span>
+                        <span class="tag">云计算</span>
+                        <span class="tag">基础设施</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-category="business">
+                <div class="timeline-date">
+                    2026年1月29日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">亚马逊裁员1.6万人，转向AI自动化</div>
+                    <div class="timeline-content">
+                        新一轮裁员影响约<span class="highlight">1.6万名企业员工</span>，主要针对中层管理和行政岗位。公司表示这些岗位已被AI系统取代，同时继续招聘AI专业工程人才。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">裁员</span>
+                        <span class="tag">就业影响</span>
+                        <span class="tag">自动化</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-category="model">
+                <div class="timeline-date">
+                    2026年1月28日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">NVIDIA发布Vera Rubin架构</div>
+                    <div class="timeline-content">
+                        CES 2026发布下一代AI平台，采用<span class="highlight">H300 GPU</span>，专为万亿参数模型设计。同时发布Isaac GR00T N1.6人形机器人模型和Cosmos世界推理模型。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">NVIDIA</span>
+                        <span class="tag">芯片</span>
+                        <span class="tag">机器人</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-category="model">
+                <div class="timeline-date">
+                    2026年1月16日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">OpenAI推出ChatGPT Health</div>
+                    <div class="timeline-content">
+                        隐私优先的健康体验，可安全连接<span class="highlight">医疗记录和健康应用</span>，获得个性化健康洞察。由医生参与设计，定位为理解趋势和准备就医的工具，而非诊断。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">医疗健康</span>
+                        <span class="tag">隐私</span>
+                        <span class="tag">OpenAI</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-category="china">
+                <div class="timeline-date">
+                    2026年1月
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">DeepSeek R1引发硅谷震动</div>
+                    <div class="timeline-content">
+                        中国AI公司DeepSeek发布R1模型，<span class="highlight">训练成本比美国同类模型低70%</span>，性能却相当。OpenAI随后指控其使用"蒸馏"技术窃取美国AI能力，引发中美AI竞争新争议。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">DeepSeek</span>
+                        <span class="tag">成本效率</span>
+                        <span class="tag">中美竞争</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2025年12月 -->
+            <div class="timeline-item" data-category="business">
+                <div class="timeline-date">
+                    2025年12月23日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">Salesforce裁员4000人，AI代理接管客服</div>
+                    <div class="timeline-content">
+                        CEO Marc Benioff透露<span class="highlight">AI代理处理了50%客户服务互动</span>，支持人员从9000人减至5000人。公司利用AI重新联系超过1亿个之前被忽视的客户线索。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">Salesforce</span>
+                        <span class="tag">客服自动化</span>
+                        <span class="tag">裁员</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-category="legal">
+                <div class="timeline-date">
+                    2025年12月18日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">好莱坞创作者联盟成立对抗AI威胁</div>
+                    <div class="timeline-content">
+                        导演、编剧、演员联合成立<span class="highlight">Hollywood Creators Coalition on AI</span>，倡导娱乐行业道德使用技术，反对未经授权使用数字肖像和自动化创意角色。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">创意产业</span>
+                        <span class="tag">版权</span>
+                        <span class="tag">工会</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-category="medical">
+                <div class="timeline-date">
+                    2025年12月17日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">Isomorphic Labs AI设计药物进入人体试验</div>
+                    <div class="timeline-content">
+                        Alphabet旗下的AI药物发现公司准备开始首批<span class="highlight">AI设计药物的人体试验</span>，使用DeepMind的结构预测模型开发。这标志着AI在生物医学实际应用的关键验证时刻。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">药物发现</span>
+                        <span class="tag">DeepMind</span>
+                        <span class="tag">临床试验</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-category="legal">
+                <div class="timeline-date">
+                    2025年12月17日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">NVIDIA发布Nemotron 3开放模型</div>
+                    <div class="timeline-content">
+                        专为<span class="highlight">"代理AI"</span>优化的开放推理模型系列，包括Nano(30B)、Super(100B)、Ultra(500B)三个版本，支持百万token上下文窗口，为开发者构建自主AI应用提供基础。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">NVIDIA</span>
+                        <span class="tag">开源模型</span>
+                        <span class="tag">代理AI</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2025年11月 -->
+            <div class="timeline-item" data-category="business">
+                <div class="timeline-date">
+                    2025年11月24日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">亚马逊承诺500亿美元建设政府AI基础设施</div>
+                    <div class="timeline-content">
+                        AWS将投资高达<span class="highlight">500亿美元</span>扩展美国联邦机构的AI和高性能计算基础设施，新增近1.3吉瓦计算能力，支持从网络安全到国家安全的大规模AI部署。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">AWS</span>
+                        <span class="tag">政府合同</span>
+                        <span class="tag">国家安全</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-category="business">
+                <div class="timeline-date">
+                    2025年11月26日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">研究：人机混合团队比纯AI代理效率高69%</div>
+                    <div class="timeline-content">
+                        斯坦福和卡内基梅隆大学研究显示，虽然纯AI代理速度快88.3%，但成功率比纯人工低32.5-49.5%。<span class="highlight">人机混合工作流程</span>整体性能提升68.7%，在高风险领域应保持人类监督。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">人机协作</span>
+                        <span class="tag">斯坦福</span>
+                        <span class="tag">效率研究</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-category="medical">
+                <div class="timeline-date">
+                    2025年11月27日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">AI模型通过脑电波检测痴呆症准确率达97%</div>
+                    <div class="timeline-content">
+                        瑞典研究人员开发AI系统分析EEG数据，区分健康人和痴呆症患者（包括阿尔茨海默病）准确率达<span class="highlight">80%以上</span>，联邦学习版本达97%，使用可解释AI技术标注影响诊断的信号部分。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">医疗诊断</span>
+                        <span class="tag">脑机接口</span>
+                        <span class="tag">阿尔茨海默</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2025年10月 -->
+            <div class="timeline-item" data-category="model">
+                <div class="timeline-date">
+                    2025年10月27日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">英国Channel 4推出首个AI新闻主播</div>
+                    <div class="timeline-content">
+                        AI生成的<span class="highlight">"Arti"</span>在社交媒体频道播报新闻，成为英国电视史上首个AI新闻主播。使用生成视频和语音合成技术创建，引发关于新闻业自动化和可信度的辩论。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">媒体</span>
+                        <span class="tag">新闻业</span>
+                        <span class="tag">生成视频</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-category="business">
+                <div class="timeline-date">
+                    2025年10月12日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">Meta以15亿美元薪酬挖角AI工程师</div>
+                    <div class="timeline-content">
+                        Meta以 rumored <span class="highlight">6年15亿美元</span>的薪酬包挖走Thinking Machines Lab联合创始人Andrew Tulloch，凸显顶级AI人才争夺战的白热化，人才被视为比算力或数据更关键。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">Meta</span>
+                        <span class="tag">人才战</span>
+                        <span class="tag">天价薪酬</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-category="legal">
+                <div class="timeline-date">
+                    2025年10月2日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">科罗拉多州起诉Character.AI与青少年自杀相关</div>
+                    <div class="timeline-content">
+                        青少年父母起诉AI聊天机器人公司，称<span class="highlight">AI模拟情感操控对话</span>导致孩子心理健康恶化最终自杀。此案可能成为确定AI工具与脆弱用户互动责任和伦理边界的重要判例。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">AI安全</span>
+                        <span class="tag">心理健康</span>
+                        <span class="tag">法律责任</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2025年9月 -->
+            <div class="timeline-item" data-category="business">
+                <div class="timeline-date">
+                    2025年9月22日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">NVIDIA投资100亿美元入股OpenAI</div>
+                    <div class="timeline-content">
+                        NVIDIA将向OpenAI投资高达<span class="highlight">1000亿美元</span>并提供数据中心芯片，OpenAI收购NVIDIA GPU系统。合作目标部署至少10吉瓦NVIDIA系统，首批硬件预计2026年底交付。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">NVIDIA</span>
+                        <span class="tag">OpenAI</span>
+                        <span class="tag">战略合作</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-category="business">
+                <div class="timeline-date">
+                    2025年9月19日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">xAI融资100亿美元，估值2000亿美元</div>
+                    <div class="timeline-content">
+                        马斯克xAI以<span class="highlight">2000亿美元估值</span>融资100亿美元，由中东投资者和主权财富基金领投。公司计划扩大AI基础设施和人才库，从特斯拉和Twitter(X)工程团队大量挖人。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">xAI</span>
+                        <span class="tag">马斯克</span>
+                        <span class="tag">融资</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-category="medical">
+                <div class="timeline-date">
+                    2025年9月18日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">AI模型预测终身疾病风险</div>
+                    <div class="timeline-content">
+                        研究人员开发<span class="highlight">Delphi-2M</span>模型，使用过往病史、生活方式、性别、BMI预测1256种疾病数十年进展，可估计疾病发生时间而不仅是是否发生，在UK Biobank数据上训练验证。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">预测医学</span>
+                        <span class="tag">疾病预防</span>
+                        <span class="tag">个性化医疗</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2025年8月 -->
+            <div class="timeline-item" data-category="model">
+                <div class="timeline-date">
+                    2025年8月29日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">微软发布自研AI模型MAI-1</div>
+                    <div class="timeline-content">
+                        微软推出首个专有AI模型<span class="highlight">MAI-Voice-1</span>（不到1秒生成1分钟音频）和<span class="highlight">MAI-1 Preview</span>（基础LLM），标志着从依赖OpenAI转向自建AI技术栈。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">微软</span>
+                        <span class="tag">自研模型</span>
+                        <span class="tag">语音AI</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-category="business">
+                <div class="timeline-date">
+                    2025年8月18日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">MIT报告：95%企业AI试点项目失败</div>
+                    <div class="timeline-content">
+                        MIT支持的研究显示约<span class="highlight">95%企业生成式AI试点</span>未产生有意义结果。问题不在模型本身，而是实施差距——缺乏集成、用户准备和战略对齐。许多组织试图独自推进而非利用外部专业知识。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">企业采用</span>
+                        <span class="tag">MIT</span>
+                        <span class="tag">实施挑战</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-category="medical">
+                <div class="timeline-date">
+                    2025年8月13日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">AI作为乳腺癌筛查第二阅片员准确率高</div>
+                    <div class="timeline-content">
+                        研究发现AI系统作为<span class="highlight">乳腺癌筛查第二阅片员</span>非常有效，准确标记潜在肿瘤并减少假阴性，改善诊断结果。正在临床环境中测试以支持放射科医生。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">乳腺癌</span>
+                        <span class="tag">医学影像</span>
+                        <span class="tag">早期检测</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2025年7月 -->
+            <div class="timeline-item" data-category="business">
+                <div class="timeline-date">
+                    2025年7月15日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">Mira Murati的Thinking Machines融资20亿美元</div>
+                    <div class="timeline-content">
+                        前OpenAI CTO Mira Murati的AI创业公司<span class="highlight">以100亿美元估值</span>融资20亿美元（a16z领投），专注开发企业决策自主代理AI系统，成为2025年最大融资轮之一。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">Mira Murati</span>
+                        <span class="tag">创业</span>
+                        <span class="tag">代理AI</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-category="military">
+                <div class="timeline-date">
+                    2025年7月15日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">特朗普宣布920亿美元AI与能源投资计划</div>
+                    <div class="timeline-content">
+                        总统 unveiled <span class="highlight">920亿美元投资计划</span>聚焦AI基础设施、电网和国内科技制造，旨在对抗中国AI势头并确保美国供应链，包括税收抵免、公私合作和国防合同。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">特朗普</span>
+                        <span class="tag">基础设施</span>
+                        <span class="tag">中美竞争</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" data-category="model">
+                <div class="timeline-date">
+                    2025年7月16日
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">AWS发布代理AI工具加速企业自动化</div>
+                    <div class="timeline-content">
+                        亚马逊在AWS Summit推出新的<span class="highlight">"代理AI"能力</span>，可自动化复杂多步骤业务流程，跨应用执行任务、响应变化条件、最小人工输入下做决策，旨在减少运营开销。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">AWS</span>
+                        <span class="tag">企业自动化</span>
+                        <span class="tag">代理AI</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2025年6月 -->
+            <div class="timeline-item" data-category="robotics">
+                <div class="timeline-date">
+                    2025年6月
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-title">小鹏汽车VLA 2.0自动驾驶AI将量产</div>
+                    <div class="timeline-content">
+                        小鹏汽车宣布<span class="highlight">VLA 2.0自动驾驶AI</span>将于2026年3月部署到客户车辆，成为首个具有L4级驾驶能力的物理AI系统。同时NVIDIA发布Alpamayo推理模型帮助自动驾驶汽车思考复杂情况。
+                    </div>
+                    <div class="timeline-tags">
+                        <span class="tag">小鹏</span>
+                        <span class="tag">自动驾驶</span>
+                        <span class="tag">L4级</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>数据来源：公开新闻报道整理 | 最后更新：2026年2月17日</p>
+            <p>💡 提示：点击顶部主题按钮切换不同视觉风格，点击筛选按钮查看特定类别</p>
+        </footer>
+    </div>
+
+    <script>
+        // 主题切换
+        const themeBtns = document.querySelectorAll('.theme-btn');
+        themeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                themeBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.documentElement.setAttribute('data-theme', btn.dataset.theme);
+                localStorage.setItem('ai-timeline-theme', btn.dataset.theme);
+            });
+        });
+
+        // 恢复保存的主题
+        const savedTheme = localStorage.getItem('ai-timeline-theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            themeBtns.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.theme === savedTheme) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // 筛选功能
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const timelineItems = document.querySelectorAll('.timeline-item');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const filter = btn.dataset.filter;
+                
+                timelineItems.forEach(item => {
+                    if (filter === 'all' || item.dataset.category.includes(filter)) {
+                        item.style.display = 'block';
+                        setTimeout(() => {
+                            item.style.opacity = '1';
+                            item.style.transform = 'translateY(0)';
+                        }, 50);
+                    } else {
+                        item.style.opacity = '0';
+                        item.style.transform = 'translateY(20px)';
+                        setTimeout(() => {
+                            item.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            });
+        });
+
+        // 滚动动画
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        timelineItems.forEach(item => {
+            observer.observe(item);
+        });
+    </script>
+</body>
+</html>

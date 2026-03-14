@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人生回忆录 - 记录珍贵的故事</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+            background: linear-gradient(135deg, #f5f0e8 0%, #e8e0d5 100%);
+            min-height: 100vh;
+            color: #4a4a4a;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 头部 */
+        .header {
+            text-align: center;
+            padding: 40px 0;
+        }
+        
+        .header h1 {
+            font-size: 36px;
+            color: #8b6f47;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 18px;
+            color: #999;
+        }
+        
+        /* 卡片 */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .card-title {
+            font-size: 24px;
+            color: #8b6f47;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        /* 表单 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus {
+            border-color: #8b6f47;
+        }
+        
+        /* 按钮 */
+        .btn {
+            width: 100%;
+            padding: 18px;
+            font-size: 20px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #8b6f47;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #6d5639;
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        .btn-voice {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #e74c3c;
+            color: white;
+            font-size: 24px;
+            border: none;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+        }
+        
+        .btn-voice:hover {
+            background: #c0392b;
+        }
+        
+        .btn-voice.recording {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        /* 问题展示 */
+        .question-box {
+            background: #faf8f5;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .question-text {
+            font-size: 22px;
+            line-height: 1.6;
+            color: #4a4a4a;
+            margin-bottom: 15px;
+        }
+        
+        .stage-badge {
+            display: inline-block;
+            background: #8b6f47;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        /* 回答区域 */
+        .answer-area {
+            margin-top: 20px;
+        }
+        
+        .answer-textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            resize: vertical;
+            outline: none;
+        }
+        
+        .answer-textarea:focus {
+            border-color: #8b6f47;
+        }
+        
+        /* 时间线 */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e0e0e0;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #faf8f5;
+            border-radius: 12px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -26px;
+            top: 25px;
+            width: 12px;
+            height: 12px;
+            background: #8b6f47;
+            border-radius: 50%;
+        }
+        
+        .timeline-stage {
+            font-size: 14px;
+            color: #8b6f47;
+            margin-bottom: 5px;
+        }
+        
+        .timeline-question {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-answer {
+            font-size: 18px;
+            color: #4a4a4a;
+            line-height: 1.6;
+        }
+        
+        /* 润色结果 */
+        .polish-result {
+            background: #f9f9f9;
+            border-left: 4px solid #8b6f47;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 0 12px 12px 0;
+            white-space: pre-wrap;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        
+        /* 隐藏 */
+        .hidden {
+            display: none !important;
+        }
+        
+        /* 状态提示 */
+        .status-msg {
+            text-align: center;
+            padding: 15px;
+            background: #e8f5e9;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            color: #2e7d32;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        
+        /* 导航 */
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            color: #8b6f47;
+            font-size: 16px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .nav-btn.active {
+            border-bottom-color: #8b6f47;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <h1>📖 人生回忆录</h1>
+            <p>记录珍贵的故事，传承温暖的记忆</p>
+        </div>
+        
+        <!-- 导航 -->
+        <div class="nav hidden" id="nav">
+            <button class="nav-btn active" onclick="showPage('interview')">访谈</button>
+            <button class="nav-btn" onclick="showPage('timeline')">时间线</button>
+            <button class="nav-btn" onclick="showPage('memoir')">回忆录</button>
+        </div>
+        
+        <!-- 欢迎页 -->
+        <div class="card" id="welcome-page">
+            <h2 class="card-title">欢迎开始您的人生回忆录</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 30px; font-size: 16px; line-height: 1.6;">
+                我是您的回忆录助手小忆。<br>
+                我会像老朋友一样，陪您聊聊您的一生。<br>
+                您可以说话回答，也可以打字，怎么方便怎么来。
+            </p>
+            
+            <div class="form-group">
+                <label>请问怎么称呼您？</label>
+                <input type="text" id="user-name" placeholder="例如：张阿姨">
+            </div>
+            
+            <div class="form-group">
+                <label>您今年多大了？</label>
+                <input type="number" id="user-age" placeholder="例如：68">
+            </div>
+            
+            <button class="btn btn-primary" onclick="startSession()">开始记录</button>
+        </div>
+        
+        <!-- 访谈页 -->
+        <div class="card hidden" id="interview-page">
+            <div class="question-box">
+                <span class="stage-badge" id="current-stage">童年时光</span>
+                <p class="question-text" id="question-text">正在加载问题...</p>
+            </div>
+            
+            <div class="answer-area">
+                <p style="text-align: center; color: #666; margin-bottom: 10px;">
+                    点击麦克风说话，或直接在下面输入
+                </p>
+                
+                <button class="btn-voice" id="voice-btn" onclick="toggleRecording()">🎤</button>
+                
+                <textarea class="answer-textarea" id="answer-text" placeholder="请分享您的故事..."></textarea>
+                
+                <button class="btn btn-primary" onclick="submitAnswer()">提交回答</button>
+                <button class="btn btn-secondary" onclick="skipQuestion()">跳过这个问题</button>
+            </div>
+        </div>
+        
+        <!-- 时间线页 -->
+        <div class="card hidden" id="timeline-page">
+            <h2 class="card-title">您的人生时间线</h2>
+            <div class="timeline" id="timeline-content">
+                <div class="loading">加载中...</div>
+            </div>
+        </div>
+        
+        <!-- 回忆录页 -->
+        <div class="card hidden" id="memoir-page">
+            <h2 class="card-title">您的回忆录</h2>
+            <button class="btn btn-primary" onclick="generateMemoir()">生成润色版回忆录</button>
+            <div id="memoir-content">
+                <p style="text-align: center; color: #999; padding: 40px;">
+                    点击上方按钮生成您的回忆录...
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局状态
+        let currentSession = null;
+        let currentQuestion = null;
+        let isRecording = false;
+        let recognition = null;
+        
+        // API基础URL
+        const API_BASE = window.location.hostname === 'localhost' 
+            ? 'http://localhost:8000' 
+            : 'http://101.126.54.134:8000';
+        
+        // 初始化语音识别
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.lang = 'zh-CN';
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            
+            recognition.onresult = (event) => {
+                let finalTranscript = '';
+                let interimTranscript = '';
+                
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcript = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        finalTranscript += transcript;
+                    } else {
+                        interimTranscript += transcript;
+                    }
+                }
+                
+                const textarea = document.getElementById('answer-text');
+                if (finalTranscript) {
+                    textarea.value += finalTranscript;
+                }
+            };
+            
+            recognition.onerror = (event) => {
+                console.error('语音识别错误:', event.error);
+                stopRecording();
+            };
+            
+            recognition.onend = () => {
+                if (isRecording) {
+                    recognition.start();
+                }
+            };
+        }
+        
+        // 开始会话
+        async function startSession() {
+            const name = document.getElementById('user-name').value.trim();
+            const age = document.getElementById('user-age').value.trim();
+            
+            if (!name || !age) {
+                alert('请填写您的姓名和年龄');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/sessions`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_name: name, user_age: parseInt(age) })
+                });
+                
+                const data = await response.json();
+                currentSession = data;
+                
+                // 显示导航和访谈页
+                document.getElementById('nav').classList.remove('hidden');
+                document.getElementById('welcome-page').classList.add('hidden');
+                document.getElementById('interview-page').classList.remove('hidden');
+                
+                // 加载第一个问题
+                loadNextQuestion();
+                
+            } catch (error) {
+                alert('启动失败，请确保后端服务已启动');
+                console.error(error);
+            }
+        }
+        
+        // 加载下一个问题
+        async function loadNextQuestion() {
+            try {
+                const response = await fetch(`${API_BASE}/api/sessions/${currentSession.id}/next-question`);
+                const data = await response.json();
+                
+                currentQuestion = data.question;
+                document.getElementById('question-text').textContent = data.question;
+                document.getElementById('current-stage').textContent = getStageName(data.stage);
+                document.getElementById('answer-text').value = '';
+                
+                // 语音朗读问题
+                speakText(data.question);
+                
+            } catch (error) {
+                console.error('加载问题失败:', error);
+            }
+        }
+        
+        // 获取阶段中文名
+        function getStageName(stage) {
+            const names = {
+                'childhood': '童年时光',
+                'youth': '青春岁月',
+                'adult': '成年生活',
+                'elder': '晚年感悟'
+            };
+            return names[stage] || stage;
+        }
+        
+        // 语音朗读
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                // 取消之前的朗读
+                window.speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-CN';
+                utterance.rate = 0.8; // 慢速，适合老人
+                utterance.pitch = 1;
+                
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+        
+        // 切换录音状态
+        function toggleRecording() {
+            if (!recognition) {
+                alert('您的浏览器不支持语音识别，请直接输入文字');
+                return;
+            }
+            
+            const btn = document.getElementById('voice-btn');
+            
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        }
+        
+        function startRecording() {
+            isRecording = true;
+            const btn = document.getElementById('voice-btn');
+            btn.classList.add('recording');
+            btn.textContent = '⏹️';
+            
+            try {
+                recognition.start();
+            } catch (e) {
+                console.error('启动录音失败:', e);
+            }
+        }
+        
+        function stopRecording() {
+            isRecording = false;
+            const btn = document.getElementById('voice-btn');
+            btn.classList.remove('recording');
+            btn.textContent = '🎤';
+            
+            try {
+                recognition.stop();
+            } catch (e) {
+                console.error('停止录音失败:', e);
+            }
+        }
+        
+        // 提交回答
+        async function submitAnswer() {
+            const answer = document.getElementById('answer-text').value.trim();
+            
+            if (!answer) {
+                alert('请先输入或说出您的回答');
+                return;
+            }
+            
+            // 停止录音
+            if (isRecording) {
+                stopRecording();
+            }
+            
+            try {
+                // 保存回答
+                await fetch(`${API_BASE}/api/sessions/${currentSession.id}/answer`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: currentSession.id,
+                        question: currentQuestion,
+                        answer: answer
+                    })
+                });
+                
+                // 检查是否需要追问
+                const followUpResponse = await fetch(`${API_BASE}/api/sessions/${currentSession.id}/follow-up`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: currentSession.id,
+                        question: currentQuestion,
+                        answer: answer
+                    })
+                });
+                
+                const followUp = await followUpResponse.json();
+                
+                if (followUp.should_ask && followUp.question) {
+                    // 显示追问
+                    const continueAnswer = confirm(`小忆想再问一下：${followUp.question}\n\n您想继续回答这个问题吗？`);
+                    if (continueAnswer) {
+                        currentQuestion = followUp.question;
+                        document.getElementById('question-text').textContent = followUp.question;
+                        document.getElementById('answer-text').value = '';
+                        speakText(followUp.question);
+                        return;
+                    }
+                }
+                
+                // 加载下一个问题
+                loadNextQuestion();
+                
+            } catch (error) {
+                console.error('提交失败:', error);
+                alert('提交失败，请重试');
+            }
+        }
+        
+        // 跳过问题
+        function skipQuestion() {
+            loadNextQuestion();
+        }
+        
+        // 显示页面
+        function showPage(page) {
+            // 隐藏所有页面
+            document.getElementById('interview-page').classList.add('hidden');
+            document.getElementById('timeline-page').classList.add('hidden');
+            document.getElementById('memoir-page').classList.add('hidden');
+            
+            // 更新导航状态
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // 显示目标页面
+            document.getElementById(`${page}-page`).classList.remove('hidden');
+            
+            // 加载数据
+            if (page === 'timeline') {
+                loadTimeline();
+            }
+        }
+        
+        // 加载时间线
+        async function loadTimeline() {
+            try {
+                const response = await fetch(`${API_BASE}/api/sessions/${currentSession.id}/timeline`);
+                const data = await response.json();
+                
+                const container = document.getElementById('timeline-content');
+                
+                if (data.timeline.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: #999;">还没有记录，先去访谈吧~</p>';
+                    return;
+                }
+                
+                container.innerHTML = data.timeline.map(item => `
+                    <div class="timeline-item">
+                        <div class="timeline-stage">${item.stage_name}</div>
+                        <div class="timeline-question">问：${item.question}</div>
+                        <div class="timeline-answer">答：${item.answer}</div>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('加载时间线失败:', error);
+            }
+        }
+        
+        // 生成回忆录
+        async function generateMemoir() {
+            const container = document.getElementById('memoir-content');
+            container.innerHTML = '<div class="loading">正在润色您的回忆录，请稍候...</div>';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/sessions/${currentSession.id}/polish`, {
+                    method: 'POST'
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    container.innerHTML = `<p style="color: red;">生成失败：${data.error}</p>`;
+                    return;
+                }
+                
+                container.innerHTML = `
+                    <h3 style="margin: 20px 0 10px; color: #8b6f47;">润色版回忆录</h3>
+                    <div class="polish-result">${data.polished}</div>
+                `;
+                
+            } catch (error) {
+                console.error('生成失败:', error);
+                container.innerHTML = '<p style="color: red;">生成失败，请重试</p>';
+            }
+        }
+    </script>
+</body>
+</html>
