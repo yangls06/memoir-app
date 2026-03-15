@@ -102,8 +102,14 @@
 
 **4. 自动复盘报告**
 - 时间: 每周日 22:00
-- 输出: `memory/reviews/2026-WXX.md`
+- 输出: `content/input/ace-reviews/2026-WXX/index.md` (⚠️ 必须是 index.md 子目录结构)
+- 页面链接: `https://andy03withai.github.io/second-brain/input/ace-reviews/2026-WXX/`
 - Cron Job ID: `929c1415-9aac-4c63-8f5a-6dff06b718b6`
+
+**⚠️ 2026-03-16 修复**: 
+- 复盘报告从 `.md` 改为 `/index.md` 子目录结构，修复 Hugo 404 问题
+- 每日简报返回 URL 修复为完整日期路径
+- 添加链接验证测试脚本
 
 **5. 主动优化**
 - 触发: 同类错误≥3次 / 技能成功率<90%
